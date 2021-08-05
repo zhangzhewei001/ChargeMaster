@@ -29,5 +29,13 @@ class AudioPlayer: NSObject, AVAudioPlayerDelegate {
     func play() {
         audioPlayer.play()
     }
+    
+    func stop() {
+        audioPlayer.stop()
+    }
+    
+    func pause() {
+        audioPlayer.pause()
+    }
   
 }

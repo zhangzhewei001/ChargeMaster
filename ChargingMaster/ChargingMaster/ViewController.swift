@@ -21,9 +21,25 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         observeBattery()
+        addNotification()
         autoGradientView.alpha = 0
         resourceName = segmentControl.titleForSegment(at: self.segmentControl.selectedSegmentIndex)
         
+    }
+    
+    func addNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBakcground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBakcground), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    @objc func appDidEnterBakcground() {
+        self.audioPlayer.pause()
+    }
+    
+    @objc func appWillEnterForeground() {
+        self.audioPlayer.play()
     }
     
     @IBAction func segmentAction(_ sender: Any) {
@@ -62,6 +78,7 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
                 self.setGradientViewAnimation(alpha: 1)
             case .unplugged:
                 image = self.imageWithUnplugged()
+                self.audioPlayer.stop()
                 self.setGradientViewAnimation(alpha: 0)
             case .unknown:
                 image = UIImage.init(systemName: "bolt.fill.batteryblock")
