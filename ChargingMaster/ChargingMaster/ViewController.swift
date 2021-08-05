@@ -17,12 +17,14 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
     var audioPlayer = AudioPlayer()
     var resourceName: String?
     @IBOutlet weak var segmentControl: UISegmentedControl!
+    let lastSelectedIndex = "lastSelectedIndex"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         observeBattery()
         addNotification()
         autoGradientView.alpha = 0
+        self.segmentControl.selectedSegmentIndex = UserDefaults.standard.integer(forKey: lastSelectedIndex)
         resourceName = segmentControl.titleForSegment(at: self.segmentControl.selectedSegmentIndex)
         
     }
@@ -43,7 +45,10 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
     }
     
     @IBAction func segmentAction(_ sender: Any) {
+        audioPlayer.stop()
         resourceName = segmentControl.titleForSegment(at: self.segmentControl.selectedSegmentIndex)
+        UserDefaults.standard.set(self.segmentControl.selectedSegmentIndex, forKey: lastSelectedIndex)
+        UserDefaults.standard.synchronize()
     }
     
     override func viewDidAppear(_ animated: Bool) {
