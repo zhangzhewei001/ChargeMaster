@@ -120,6 +120,10 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         
         return image
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
 }
 
